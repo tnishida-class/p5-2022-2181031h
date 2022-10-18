@@ -11,6 +11,10 @@ function setup(){
 function draw(){
   background(160, 192, 255);
   count = (count + 1) % cycle;
-  // BLANK[1]
+  size = 0.05*((count-55)**2)
   ellipse(width / 2, height / 2, size);
+  stroke(0, 0, 255)
+
+
+  if(keyIsDown("A".charCodeAt(0))){ count += 0.8; } 
 }
