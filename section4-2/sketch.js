@@ -17,6 +17,10 @@ function draw(){
     b.x += b.vx;
     b.y += b.vy;
   }
+  let c={x:width/2, y:height/2, size:random(10, 100)};
+  balls.push(c);
+
+
 }
 
 function mouseDragged(){
