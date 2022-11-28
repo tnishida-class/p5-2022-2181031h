@@ -14,7 +14,12 @@ let kbx, kby, vkbx, vkby,kill_kuribo=0,time_k=0;
 let dkx, dky, dkx_1, dky_1, dkx_2, dky_2;
 let dokan_size;
 let hit = 0;
+let hit_coin = 0;
 let hit_b = 0;
+let hit_c1 = 0;
+let hit_c2 = 0;
+let hit_c3 = 0;
+let hit_c4 = 0;
 let kx, ky, vk;
 const gk = 0.15;
 let big = 0;
@@ -22,7 +27,7 @@ let nx, ny,kill_nokonoko=0,time_n=0;
 let rx1, ry1, rx2, ry2, rx3, ry3, sx1, sy1, hx1, hy1;
 let coin_size, time_coin;
 let cox, coy;
-let cox1, coy1, cox2, coy2, cox3, coy3, cox4, coy4;
+let cox1, coy1, cox2, coy2, cox3, coy3, cox4, coy4, cox5, coy5, coy6, coy7;
 let time_m=100,kill=0;
 let pnx,pny,vpny;
 
@@ -646,6 +651,10 @@ function setup(){
   coy3 = onblock - bs*5;
   cox4 = bs*23 + ps*3;
   coy4 = onblock + bs*0;
+  cox5 = bs*17 + ps*3;
+  coy5 = onblock - bs*0.5;
+  coy6 = onblock - bs*0.5;
+  coy7 = onblock - bs*0.5;
   pnx = bs*2;
   pny = height / 2;
 }
@@ -1157,7 +1166,7 @@ function draw(){
   let onblock=height-ground-bs*4;
   let block_1=height-ground-bs*7;
   let block_2=height-ground-bs*9;
-
+  hit_coin = hit_b + hit_c1 + hit_c2 + hit_c3 + hit_c4;
   
   //草1
   grass_size = 110;
@@ -1353,21 +1362,6 @@ function draw(){
   renga(bs * 19, onblock - bs * 5);
   renga(bs * 23, gy - bs * 4);
 
-  //コイン1･2･3
-  time_coin += 1;
-  if (time_coin % 8 == 0 || time_coin % 8 == 1 || time_coin % 8 == 2 || time_coin % 8 == 3){
-    coin(cox1, coy1);
-    coin(cox2, coy2);
-    coin(cox3, coy3);
-    coin(cox4, coy4);
-  }
-  else {
-    coin_b(cox1, coy1);
-    coin_b(cox2, coy2);
-    coin_b(cox3, coy3);
-    coin_b(cox4, coy4);
-  }
-
 
   //土管1･2
   dokan_1(dkx_1, dky_1);
@@ -1391,12 +1385,87 @@ function draw(){
       }
     }
   }
-  if(dist(mx-ps*6, my-bs, bs * 17+ps*8, onblock)<ps*8*2.2&&my>onblock){hit_b+=1;}
-  ky+=vk
-  if(hit_b==0){renga(bs * 17, gy - bs * 4);}
-  if(hit_b>0){
-    solid(bs * 17, gy - bs * 4);
+  //ブロックたたいてコイン
+  if(dist(mx-ps*6, my-bs, bs * 17+ps*8, onblock)<ps*8*2 && my>onblock){hit_b+=1;}
+  if(hit_b == 0){renga(bs * 17, gy - bs * 4);}
+  if(hit_b > 0){
+    if(hit_b == 1){
+      coy5 += 15;
+      coin(cox5, coy5);
+      coy5 = constrain(coy5,0, onblock + bs - ps * 5);
+      renga(bs * 17, gy - bs * 4);
+    }
+    else if(hit_b == 2){
+      coy6 += 15;
+      coin(cox5, coy6);
+      coy6 = constrain(coy6,0, onblock + bs - ps * 5);
+      renga(bs * 17, gy - bs * 4);
+    }
+    else if(hit_b == 3){
+      coy7 += 15;
+      coin(cox5, coy7);
+      coy7 = constrain(coy7,0, onblock + bs - ps * 5);
+      solid(bs * 17, gy - bs * 4);
+    }
+    else{
+      solid(bs * 17, gy - bs * 4);
+    }
   }
+  hit_b = constrain(hit_b, 0, 3);
+  //コイン1･2･3･4
+  time_coin += 1;
+  //触れてコイン
+  if(dist(mx-ps*6, my-bs, bs * 17+ps*8, coy1 - bs)<ps*8*2){hit_c1 = 1;}
+  if(hit_c1 == 1){
+    coy1 += 15;
+    coin(cox1, coy1);
+    coy1 = constrain(coy1, 0, onblock - bs * 4 - ps * 5);
+    renga(bs * 17, onblock - bs * 5);
+  }
+  if(hit_c1 == 0){
+    if (time_coin % 8 == 0 || time_coin % 8 == 1 || time_coin % 8 == 2 || time_coin % 8 == 3){coin(cox1, coy1);}
+    else {coin_b(cox1, coy1);}
+  }
+
+  if(dist(mx-ps*6, my-bs, bs * 18+ps*8, coy2 - bs)<ps*8*2){hit_c2 = 1;}
+  if(hit_c2 == 1){
+    coy2 += 15;
+    coin(cox2, coy2);
+    coy2 = constrain(coy2, 0, onblock - bs * 4 - ps * 5);
+    renga(bs * 18, onblock - bs * 5);
+  }
+  if(hit_c2 == 0){
+    if (time_coin % 8 == 0 || time_coin % 8 == 1 || time_coin % 8 == 2 || time_coin % 8 == 3){coin(cox2, coy2);}
+    else {coin_b(cox2, coy2);}
+  }
+
+  if(dist(mx-ps*6, my-bs, bs * 19+ps*8, coy3 - bs)<ps*8*2){hit_c3 = 1;}
+  if(hit_c3 == 1){
+    coy3 += 15;
+    coin(cox3, coy3);
+    coy3 = constrain(coy3, 0, onblock - bs * 4 - ps * 5);
+    renga(bs * 19, onblock - bs * 5);
+  }
+  if(hit_c3 == 0){
+    if (time_coin % 8 == 0 || time_coin % 8 == 1 || time_coin % 8 == 2 || time_coin % 8 == 3){coin(cox3, coy3);}
+    else {coin_b(cox3, coy3);}
+  }
+
+  if(dist(mx-ps*6, my-bs, bs * 23+ps*8, coy4 - bs)<ps*8*2){hit_c4 = 1;}
+  if(hit_c4 == 1){
+    coy4 += 15;
+    coin(cox4, coy4);
+    coy4 = constrain(coy4, gy - bs * 4, gy - bs * 3 - ps * 5);
+    renga(bs * 23, gy - bs * 4);
+  }
+  if(hit_c4 == 0){
+    if (time_coin % 8 == 0 || time_coin % 8 == 1 || time_coin % 8 == 2 || time_coin % 8 == 3){coin(cox4, coy4);}
+    else {coin_b(cox4, coy4);}
+  }
+  hit_c1 = constrain(hit_c1, 0, 1);
+  hit_c2 = constrain(hit_c2, 0, 1);
+  hit_c3 = constrain(hit_c3, 0, 1);
+  hit_c4 = constrain(hit_c4, 0, 1);
 
   //パタパタ
   pny += vpny;
@@ -1456,19 +1525,18 @@ function draw(){
     nokonoko(nx, ny);
     nx-=0.8;
   }
-  // if(kill_nokonoko>0){//仮の倒した動きを書いといた
-  //   time_n+=1;
-  //   if(time_n<8){
-  //     nokonoko(nx, ny);
-  //     ny+=30;
-  //   }
-  //   if(time_n>40){
-  //     kill_nokonoko=0;
-  //     nx=width;
-  //     ny=height-ground;
-  //     time_n=0;
-  //   }
-  // }
+  if(kill_nokonoko>0){//仮の倒した動きを書いといた
+    time_n+=1;
+    if(time_n<8){
+      nokonoko(nx, ny);
+    }
+    if(time_n>40){
+      kill_nokonoko=0;
+      nx=width;
+      ny=height-ground;
+      time_n=0;
+    }
+  }
   if(kill_nokonoko>0){
     c_nokonoko(nx, ny);
     time_n+=1;
@@ -1552,7 +1620,6 @@ function draw(){
   if(dist(mx-ps*6, my-ps*8, kbx+ps*8,kby+ps*8)<bs&&my<height-ground){kill_kuribo+=1;}
   if(dist(mx-ps*6, my-ps*8, nx+ps*8,ny-ps*12)<bs&&my<height-ground){kill_nokonoko+=1;}
   if(dist(mx-ps*6, my-ps*8, nx+ps*8,ny-ps*12)<bs&&my<height-ground&&kill_nokonoko>0){koura_humi+=1;}
-  
   kill=max(kill_kuribo,kill_nokonoko);
   //ノコノコ,クリボーの当たり判定(マリオ負け)
   if(dist(mx-ps*6, my-ps*8, nx+ps*8,ny-ps*0)<bs||dist(mx-ps*6, my-ps*8, kbx+ps*8,kby+ps*8)<bs&&kill==0){
@@ -1565,13 +1632,212 @@ function draw(){
       big+=-1;
     }
   }
-  time_m+=1;
-  if(big<0){
-    background(0,0,0);
+
+//クリア画面
+  if(hit_coin == 7){
+    background(160, 192, 255);
+    strokeWeight(1);
+    line(0, gy, width, gy);
+    //草1
+    grass_size = 110;
+    const h_g1 = grass_size / data_8.length;
+    for(let i = 0; i <  data_8.length; i++){
+      const row = data_8[i];
+      const w = (17 / 32)  * grass_size / row.length;
+      for(let j =0; j <  row.length; j++){
+          if(data_8[i][j] == 1){
+            strokeWeight(0);
+            fill(0);
+            rect(bs * 1 + i * w, gy - bs - ps * 3 + j * h_g1, w, h_g1);
+          }
+          else if(data_8[i][j] == 2){
+            fill(145, 219, 18);
+            rect(bs * 1 + i * w, gy - bs - ps * 3 + j * h_g1, w, h_g1);
+          }
+          else if(data_8[i][j] == 3){
+            fill(2, 156, 30);
+            rect(bs * 1 + i * w, gy - bs - ps * 3 + j * h_g1, w, h_g1);
+          }
+          else{
+            noFill();
+            rect(bs * 1 + i * w, gy - bs - ps * 3 + j * h_g1, w, h_g1);
+          }
+      }
+    }
+    
+    //草3
+    grass_size = 110 * 2;
+    const h_g3 = grass_size / data_9.length;
+    for(let i = 0; i <  data_9.length; i++){
+      const row = data_9[i];
+      const w = (17 / 64)  * grass_size / row.length;
+      for(let j =0; j <  row.length; j++){
+          if(data_9[i][j] == 1){
+            strokeWeight(0);
+            fill(0);
+            rect(bs * 16.5 + i * w, gy - bs - ps * 3 + j * h_g3, w, h_g3);
+          }
+          else if(data_9[i][j] == 2){
+            fill(145, 219, 18);
+            rect(bs * 16.5 + i * w, gy - bs - ps * 3 + j * h_g3, w, h_g3);
+          }
+          else if(data_9[i][j] == 3){
+            fill(2, 156, 30);
+            rect(bs * 16.5 + i * w, gy - bs - ps * 3 + j * h_g3, w, h_g3);
+          }
+          else{
+            noFill();
+            rect(bs * 16.5 + i * w, gy - bs - ps * 3 + j * h_g3, w, h_g3);
+          }
+      }
+    }
+
+    //地面
+    for(let i=0; i<width; i+=bs){
+      for(let j=gy; j<height; j+=bs){
+        rock(i, j);
+      }
+    }
+    
+    //雲1
+    cloud_size = 110;
+    const h_c1 = cloud_size / data_3.length;
+    for(let i = 0; i <  data_3.length; i++){
+      const row = data_3[i];
+      const w = (26 / 32) * cloud_size / row.length;
+      for(let j =0; j <  row.length; j++){
+          if(data_3[i][j] == 1){
+            noStroke();
+            fill(0);
+            rect(850 + i * w, 50 + j * h_c1, w, h_c1);
+          }
+          else if(data_3[i][j] == 2){
+            fill(255);
+            rect(850 + i * w, 50 + j * h_c1, w, h_c1);
+          }
+          else if(data_3[i][j] == 3){
+            fill(108, 200, 240);
+            rect(850 + i * w, 50 + j * h_c1, w, h_c1);
+          }
+          else{
+            noFill();
+            rect(850 + i * w, 50 + j * h_c1, w, h_c1);
+          }
+      }
+    }
+
+    //雲2
+    cloud_size = (48 / 32) * 105;
+    const h_c2 = cloud_size / data_4.length;
+    for(let i = 0; i <  data_4.length; i++){
+      const row = data_4[i];
+      const w = (26 / 48) * cloud_size / row.length;
+      for(let j =0; j <  row.length; j++){
+          if(data_4[i][j] == 1){
+            strokeWeight(0);
+            fill(0);
+            rect(450 + i * w, 90 + j * h_c2, w, h_c2);
+          }
+          else if(data_4[i][j] == 2){
+            fill(255);
+            rect(450 + i * w, 90 + j * h_c2, w, h_c2);
+          }
+          else if(data_4[i][j] == 3){
+            fill(108, 200, 240);
+            rect(450 + i * w, 90 + j * h_c2, w, h_c2);
+          }
+          else{
+            noFill();
+            rect(450 + i * w, 90 + j * h_c2, w, h_c2);
+          }
+        
+      }
+    }
+
+    //雲3-1
+    cloud_size = (64 / 32) * 105;
+    const h_c3 = cloud_size / data_5.length;
+    for(let i = 0; i <  data_5.length; i++){
+      const row = data_5[i];
+      const w = (26 / 64) * cloud_size / row.length;
+      for(let j =0; j <  row.length; j++){
+          if(data_5[i][j] == 1){
+            strokeWeight(0);
+            fill(0);
+            rect(30 + i * w, 110 + j * h_c3, w, h_c3);
+          }
+          else if(data_5[i][j] == 2){
+            fill(255);
+            rect(30 + i * w, 110 + j * h_c3, w, h_c3);
+          }
+          else if(data_5[i][j] == 3){
+            fill(108, 200, 240);
+            rect(30 + i * w, 110 + j * h_c3, w, h_c3);
+          }
+          else{
+            noFill();
+            rect(30 + i * w, 110 + j * h_c3, w, h_c3);
+          }
+        
+      }
+    }
+
+    //雲3-2
+    cloud_size = (64 / 32) * 105;
+    const h_c4 = cloud_size / data_5.length;
+    for(let i = 0; i <  data_5.length; i++){
+      const row = data_5[i];
+      const w = (26 / 64) * cloud_size / row.length;
+      for(let j =0; j <  row.length; j++){
+          if(data_5[i][j] == 1){
+            strokeWeight(0);
+            fill(0);
+            rect(1090 + i * w, 140 + j * h_c4, w, h_c4);
+          }
+          else if(data_5[i][j] == 2){
+            fill(255);
+            rect(1090 + i * w, 140 + j * h_c4, w, h_c4);
+          }
+          else if(data_5[i][j] == 3){
+            fill(108, 200, 240);
+            rect(1090 + i * w, 140 + j * h_c4, w, h_c4);
+          }
+          else{
+            noFill();
+            rect(1090 + i * w, 140 + j * h_c4, w, h_c4);
+          }
+        
+      }
+    }
+    
+    renga(rx1, ry1);
+    renga(rx2, ry2);
+    renga(rx3, ry3);
+    solid(sx1, sy1);
+    solid(sx1 + bs*2, sy1);
+    tsuta(bs * 6, onblock - bs * (3 + 72 / 14) );
+    renga(bs * 17, onblock - bs * 5);
+    renga(bs * 18, onblock - bs * 5);
+    renga(bs * 19, onblock - bs * 5);
+    renga(bs * 23, gy - bs * 4);
+
+
+    //土管1･2
+    dokan_1(dkx_1, dky_1);
+    dokan_2(dkx_2, dky_2);
     textSize(width / 10);
     textFont('Chlorinap');
+    fill(255,255,0);
+    text("COURSE CLEAR", width / 10, height / 2);
+  }
+  time_m+=1;
+  //ゲームオーバー
+  if(big<0){
+    background(0,0,0);
+    textSize(width / 8);
+    textFont('Chlorinap');
     fill(255,0,0);
-    text("Game Over", width / 6, height / 2);
+    text("Game Over", width / 8, height / 2);
     deadmario(x,y);
     y+=5;
   }
